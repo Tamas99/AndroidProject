@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashScreen">
+<!--    app:startDestination="@id/overviewFragment">-->
+
+    <fragment
+        android:id="@+id/overviewFragment"
+        android:name="com.example.androidproject.overview.OverviewFragment"
+        android:label="fragment_overview"
+        tools:layout="@layout/fragment_overview" >
+        <action
+            android:id="@+id/action_showDetail"
+            app:destination="@id/detailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.example.androidproject.detail.DetailFragment"
+        android:label="fragment_detail"
+        tools:layout="@layout/fragment_detail">
+        <argument
+            android:name="selectedProperty"
+            app:argType="com.example.androidproject.network.Restaurant" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/splashScreen"
+        android:name="com.example.androidproject.SplashScreenFragment"
+        android:label="fragment_splashscreen"
+        tools:layout="@layout/fragment_splash_screen"
+        >
+        <action
+            android:id="@+id/action_splashscreen_to_overviewFragment"
+            app:destination="@id/overviewFragment" />
+    </fragment>
+
+</navigation>
