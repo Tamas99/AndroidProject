@@ -10,8 +10,8 @@
     <fragment
         android:id="@+id/overviewFragment"
         android:name="com.example.androidproject.overview.OverviewFragment"
-        android:label="fragment_overview"
-        tools:layout="@layout/fragment_overview" >
+        android:label="Overview"
+        tools:layout="@layout/fragment_overview">
         <action
             android:id="@+id/action_showDetail"
             app:destination="@id/detailFragment" />
@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.example.androidproject.detail.DetailFragment"
-        android:label="fragment_detail"
+        android:label="Details"
         tools:layout="@layout/fragment_detail">
         <argument
             android:name="selectedProperty"
@@ -30,12 +30,48 @@
     <fragment
         android:id="@+id/splashScreen"
         android:name="com.example.androidproject.SplashScreenFragment"
-        android:label="fragment_splashscreen"
-        tools:layout="@layout/fragment_splash_screen"
-        >
+        android:label="SplashScreen"
+        tools:layout="@layout/fragment_splash_screen">
         <action
             android:id="@+id/action_splashscreen_to_overviewFragment"
-            app:destination="@id/overviewFragment" />
+            app:destination="@id/overviewFragment"
+            app:popUpTo="@id/splashScreen"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.androidproject.profile.ProfileFragment"
+        android:label="Profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <argument
+            android:name="email"
+            app:argType="string" />
+        <argument
+            android:name="password"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.androidproject.profile.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.androidproject.profile.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
 
 </navigation>

@@ -10,11 +10,12 @@ android {
         dataBinding true
     }
     defaultConfig {
-        applicationId "com.example.android.marsrealestate"
+        applicationId "com.example.androidproject"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -42,8 +43,8 @@ dependencies {
     // Constraint Layout
     implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
 
-    // ViewModel and LiveData
-    // implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
+    // ViewModel and LiveData lifecycles
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"
 
     // Navigation
@@ -76,9 +77,17 @@ dependencies {
 
     // RecyclerView
     implementation "androidx.recyclerview:recyclerview:$version_recyclerview"
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
-    // Splash Screen
-    implementation 'gr.pantrif:easy-android-splash-screen:0.0.1'
+    // Room components
+    def room_version = "2.3.0-alpha03"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:$room_version"
+    // optional - Test helpers
+    testImplementation "androidx.room:room-testing:$room_version"
+
+    //Multidex
+    implementation 'androidx.multidex:multidex:2.0.1'
 }
