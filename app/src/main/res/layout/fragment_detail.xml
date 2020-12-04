@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.example.androidproject.detail.DetailViewModel" />
@@ -15,15 +16,17 @@
         android:layout_height="match_parent"
         tools:context=".DetailFragment">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
             android:padding="16dp">
 
             <ImageView
                 android:id="@+id/main_photo_image"
-                android:layout_width="0dp"
-                android:layout_height="266dp"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
                 android:scaleType="centerCrop"
                 app:imageUrl="@{viewModel.selectedProperty.imgSrcUrl}"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -31,49 +34,43 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:src="@tools:sample/backgrounds/scenic" />
 
-
             <TextView
-                android:id="@+id/property_city_label_text"
-                android:layout_width="wrap_content"
+                android:id="@+id/property_name_text"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="39sp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@{viewModel.selectedProperty.toString()}"
+                android:textAlignment="center"
+                android:textSize="40sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_photo_image"
-                android:text="City:" />
+                app:layout_constraintTop_toBottomOf="@id/main_photo_image" />
 
-            <TextView
-                android:id="@+id/property_city_text"
+            <Button
+                android:id="@+id/buttonGoogleMap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@{viewModel.selectedProperty.city}"
-                android:textColor="#de000000"
-                android:textSize="39sp"
+                android:text="Go to Maps"
+                android:textSize="30sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/property_city_label_text"
-                tools:text="To Rent" />
-
-            <TextView
-                android:id="@+id/phone_label_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Phone:"
-                android:textSize="39sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/property_city_text" />
+                app:layout_constraintTop_toBottomOf="@id/phone_text" />
 
             <TextView
                 android:id="@+id/phone_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+                android:tooltipText="Phone number"
                 android:text="@{viewModel.selectedProperty.phone}"
-                android:textColor="#de000000"
+                android:textStyle="bold"
+                android:textColor="#00dd00"
                 android:textSize="39sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/phone_label_text"
-                tools:text="$100,000" />
+                app:layout_constraintTop_toBottomOf="@+id/phone_label_text" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
     </ScrollView>
 </layout>

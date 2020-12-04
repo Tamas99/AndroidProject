@@ -98,13 +98,13 @@ class LoginFragment : Fragment() {
             if (user?.status == true) {
                 if(findNavController().currentDestination?.id == R.id.loginFragment) {
                     val action = LoginFragmentDirections.actionLoginFragmentToProfileFragment(user.email, user.password)
-                    Toast.makeText(requireContext(), "Logged in", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Logged in successfully", Toast.LENGTH_SHORT).show()
                     findNavController().navigate(action)
                 }
             }
-            else {
-                Toast.makeText(requireContext(), "Wrong email or password", Toast.LENGTH_SHORT).show()
-            }
+//            else {
+//                Toast.makeText(requireContext(), "Wrong email or password", Toast.LENGTH_SHORT).show()
+//            }
         })
         mUserViewModel.readOneData(email, password)
     }

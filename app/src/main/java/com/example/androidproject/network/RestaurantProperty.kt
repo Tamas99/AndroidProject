@@ -19,7 +19,11 @@ data class Restaurant(val id: String,
                       val phone: String,
                       val lat: Float,
                       val lng: Float,
-                      val price: Float,
+                      val price: String,
                       val reserve_url: String,
                       val mobile_reserve_url: String,
-                      @Json(name="image_url") val imgSrcUrl: String) : Parcelable
+                      @Json(name="image_url") val imgSrcUrl: String) : Parcelable {
+    override fun toString(): String {
+        return "${name}\nPrice: ${price}$\n${city}, ${state}, ${country}\n\nAddress\n${address}\n\n${area}\n\nPostal code\n${postal_code}"
+    }
+                      }

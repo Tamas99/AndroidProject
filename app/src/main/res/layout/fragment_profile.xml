@@ -16,13 +16,29 @@
 
 
     <TextView
-        android:id="@+id/textViewUsername"
+        android:id="@+id/textViewUsernameProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="40sp"
+        android:layout_marginTop="40dp"
+        android:textStyle="bold"
+        android:text="d"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/textViewEmailProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:layout_marginTop="40dp"
+        android:textStyle="bold"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewUsernameProfile" />
 
     <Button
         android:id="@+id/buttonLogout"

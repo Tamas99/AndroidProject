@@ -54,7 +54,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
 
     fun getActive() {
         viewModelScope.launch(Dispatchers.IO) {
-            var userdata = repository.getActive()
+            var userdata: User? = repository.getActive()
             if (userdata == null) {
                 userdata = User(0,"Guest", "none", "none", false)
             }

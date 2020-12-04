@@ -25,6 +25,9 @@
         <argument
             android:name="selectedProperty"
             app:argType="com.example.androidproject.network.Restaurant" />
+        <action
+            android:id="@+id/action_detailFragment_to_googleMapFragment"
+            app:destination="@id/googleMapFragment" />
     </fragment>
 
     <fragment
@@ -72,6 +75,18 @@
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/googleMapFragment"
+        android:name="com.example.androidproject.map.GoogleMapFragment"
+        android:label="fragment_google_map"
+        tools:layout="@layout/fragment_google_map" >
+        <argument
+            android:name="longitude"
+            app:argType="float" />
+        <argument
+            android:name="latitude"
+            app:argType="float" />
     </fragment>
 
 </navigation>

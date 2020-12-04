@@ -1,5 +1,6 @@
 package com.example.androidproject.data
 
+import androidx.annotation.Nullable
 import androidx.lifecycle.LiveData
 import androidx.room.*
 
@@ -12,9 +13,11 @@ interface UserDao {
     @Update
     suspend fun updateUser(user: User)
 
+    @Nullable
     @Query("SELECT * FROM user_table WHERE email LIKE :email AND password LIKE :password")
     suspend fun readOneData(email: String, password: String): User
 
+    @Nullable
     @Query("SELECT * FROM user_table WHERE status = 1")
     suspend fun getActive(): User
 
