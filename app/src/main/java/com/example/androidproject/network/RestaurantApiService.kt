@@ -9,6 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 private const val BASE_URL = "https://opentable.herokuapp.com/"
 
@@ -28,10 +29,14 @@ private val retrofit = Retrofit.Builder()
 
 //3
 interface RestaurantApiService {
-    @GET("api/restaurants?city=London")
-    fun getProperties():
+    @GET("api/restaurants")
+    fun getProperties(@Query("city") city: String):
             //9
             Deferred<Restaurants>
+
+    @GET("api/cities")
+    fun getCities():
+            Deferred<Cities>
 }
 
 //4

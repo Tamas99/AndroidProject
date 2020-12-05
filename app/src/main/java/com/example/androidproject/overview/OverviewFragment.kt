@@ -1,7 +1,14 @@
 package com.example.androidproject.overview
 
+import android.content.Context
+import android.content.Context.MODE_WORLD_READABLE
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
+import android.widget.Adapter
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -21,6 +28,9 @@ import kotlinx.android.synthetic.main.fragment_overview.*
  */
 class OverviewFragment : Fragment() {
     private lateinit var navController: NavController
+    private lateinit var binding: FragmentOverviewBinding
+    private var itemPos = -1
+    private var current_page = 1
 
     /**
      * Lazily initialize our [OverviewViewModel].
@@ -35,7 +45,7 @@ class OverviewFragment : Fragment() {
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val binding = FragmentOverviewBinding.inflate(inflater)
+        binding = FragmentOverviewBinding.inflate(inflater)
 
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
@@ -48,6 +58,8 @@ class OverviewFragment : Fragment() {
             viewModel.displayPropertyDetails(it)
         })
 
+
+
         viewModel.navigateToSelectedProperty.observe(viewLifecycleOwner, Observer {
             if (null != it) {
                 this.findNavController().navigate(OverviewFragmentDirections.actionShowDetail(it))
@@ -55,8 +67,35 @@ class OverviewFragment : Fragment() {
             }
         })
 
-        setHasOptionsMenu(true)
+        viewModel.cityProperties.observe(viewLifecycleOwner, Observer<List<String>> {
+            binding.spinnerCity.adapter = ArrayAdapter(requireContext(), R.layout.spinner_text_view, it)
+            if (itemPos != -1) {
+                binding.spinnerCity.setSelection(itemPos)
+            }
+            binding.spinnerCity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    onCityClicked(parent!!)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    TODO("Not yet implemented")
+                }
+            }
+        })
+
         return binding.root
+    }
+
+    private fun onCityClicked(parent: AdapterView<*>) {
+        viewModel.updateFilter(parent?.selectedItem.toString())
+        if(parent?.selectedItemPosition != 0) {
+            itemPos = parent?.selectedItemPosition
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,23 +103,6 @@ class OverviewFragment : Fragment() {
 
         val navHostFragment = parentFragmentManager?.findFragmentById(R.id.nav_host_fragment)
         navController = navHostFragment!!.findNavController()
-
-        (activity as AppCompatActivity?)!!.setSupportActionBar(toolbar)
-        (activity as AppCompatActivity?)!!.setupActionBarWithNavController(navController)
-
         bottom_nav.setupWithNavController(navController)
     }
-
-
-
-    /**
-     * Inflates the overflow menu that contains filtering options.
-     */
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.overflow_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-
-
 }

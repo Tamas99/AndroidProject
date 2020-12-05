@@ -26,20 +26,24 @@ class OverviewViewModel : ViewModel() {
     //12
     // The internal MutableLiveData String that stores the status of the most recent request
     private val _status = MutableLiveData<RestaurantApiStatus>()
-
     // The external immutable LiveData for the request status String
     val status: LiveData<RestaurantApiStatus>
         get() = _status
 
+    // Restaurant properties
     private val _properties = MutableLiveData<List<Restaurant>>()
-
     val properties: LiveData<List<Restaurant>>
-    get() = _properties
+        get() = _properties
 
     // Navigate
     private val _navigateToSelectedProperty = MutableLiveData<Restaurant>()
     val navigateToSelectedProperty: LiveData<Restaurant>
         get() = _navigateToSelectedProperty
+
+    // Cities
+    private val _cityProperties = MutableLiveData<List<String>>()
+    val cityProperties: LiveData<List<String>>
+        get() = _cityProperties
 
     //10
     private var viewModelJob = Job()
@@ -50,18 +54,19 @@ class OverviewViewModel : ViewModel() {
      * Call getRestaurantProperties() on init so we can display status immediately.
      */
     init {
-        getRestaurantProperties()
+        getRestaurantProperties("London")
+        getCities()
     }
 
     /**
      * Sets the value of the status LiveData to the Mars API status.
      */
-    private fun getRestaurantProperties() {
+    private fun getRestaurantProperties(filter: String) {
         //5
         //7
         //11
         coroutineScope.launch {
-            var getPropertiesDeferred = RestaurantApi.retrofitService.getProperties()
+            var getPropertiesDeferred = RestaurantApi.retrofitService.getProperties(filter)
             try {
                 _status.value = RestaurantApiStatus.LOADING
                 var listResult = getPropertiesDeferred.await()
@@ -72,6 +77,19 @@ class OverviewViewModel : ViewModel() {
                 _properties.value = ArrayList()
             }
         }
+    }
+
+    private fun getCities() {
+        coroutineScope.launch {
+            val getCitiesDeferred = RestaurantApi.retrofitService.getCities()
+            try {
+                var listResultCities = getCitiesDeferred.await()
+                _cityProperties.value = listResultCities.cities
+            } catch (e: Exception) {
+                _cityProperties.value = ArrayList()
+            }
+        }
+
     }
 
     override fun onCleared() {
@@ -86,4 +104,9 @@ class OverviewViewModel : ViewModel() {
     fun displayPropertyDetailsComplete() {
         _navigateToSelectedProperty.value = null
     }
+
+    fun updateFilter(filter: String) {
+        getRestaurantProperties(filter)
+    }
+
 }

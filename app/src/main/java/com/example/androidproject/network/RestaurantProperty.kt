@@ -27,3 +27,5 @@ data class Restaurant(val id: String,
         return "${name}\nPrice: ${price}$\n${city}, ${state}, ${country}\n\nAddress\n${address}\n\n${area}\n\nPostal code\n${postal_code}"
     }
                       }
+
+data class Cities(val count: Int, val cities: List<String>)

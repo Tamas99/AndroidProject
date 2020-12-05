@@ -71,7 +71,7 @@ class LoginFragment : Fragment() {
         val navHostFragment = parentFragmentManager?.findFragmentById(R.id.nav_host_fragment)
         navController = navHostFragment!!.findNavController()
 
-        (activity as AppCompatActivity?)!!.setupActionBarWithNavController(navController)
+//        (activity as AppCompatActivity?)!!.setupActionBarWithNavController(navController)
 
         bottom_nav.setupWithNavController(navController)
     }
