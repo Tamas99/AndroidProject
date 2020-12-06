@@ -22,6 +22,7 @@ import com.example.androidproject.R
 import com.example.androidproject.databinding.FragmentOverviewBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_overview.*
+import java.util.*
 
 /**
  * This fragment shows the the status of the opentable web services transaction.
@@ -30,7 +31,7 @@ class OverviewFragment : Fragment() {
     private lateinit var navController: NavController
     private lateinit var binding: FragmentOverviewBinding
     private var itemPos = -1
-    private var current_page = 1
+    var cur_page_var: Int = 1
 
     /**
      * Lazily initialize our [OverviewViewModel].
@@ -88,7 +89,38 @@ class OverviewFragment : Fragment() {
             }
         })
 
+        binding.nextButton.setOnClickListener {
+            onNextClicked()
+        }
+
+        binding.prevButton.setOnClickListener {
+            onPrevClicked()
+        }
+
         return binding.root
+    }
+
+    private fun onPrevClicked() {
+        if (cur_page_var == 1) return
+        Timer().schedule(object : TimerTask() {
+            override fun run() {
+                binding.nextButton.isClickable = false
+                cur_page_var -= 1
+                viewModel.updatePageFilter(binding.spinnerCity.selectedItem.toString(), cur_page_var.toString())
+                binding.nextButton.isClickable = true
+            }
+        }, 200)
+    }
+
+    private fun onNextClicked() {
+        Timer().schedule(object : TimerTask() {
+            override fun run() {
+                binding.nextButton.isClickable = false
+                cur_page_var += 1
+                viewModel.updatePageFilter(binding.spinnerCity.selectedItem.toString(), cur_page_var.toString())
+                binding.nextButton.isClickable = true
+            }
+        }, 200)
     }
 
     private fun onCityClicked(parent: AdapterView<*>) {
@@ -104,5 +136,9 @@ class OverviewFragment : Fragment() {
         val navHostFragment = parentFragmentManager?.findFragmentById(R.id.nav_host_fragment)
         navController = navHostFragment!!.findNavController()
         bottom_nav.setupWithNavController(navController)
+    }
+
+    override fun toString(): String {
+        return "2"
     }
 }

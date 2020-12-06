@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Restaurants(val total_entries: String, val restaurants: List<Restaurant>) : Parcelable
+data class Restaurants(val total_entries: String, val current_page: String, val restaurants: List<Restaurant>) : Parcelable
 
 @Parcelize
 data class Restaurant(val id: String,

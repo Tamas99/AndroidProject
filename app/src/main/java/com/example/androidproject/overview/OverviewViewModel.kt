@@ -45,6 +45,11 @@ class OverviewViewModel : ViewModel() {
     val cityProperties: LiveData<List<String>>
         get() = _cityProperties
 
+    // Current Page
+    private val _current_page = MutableLiveData<String>()
+    val current_page: LiveData<String>
+        get() = _current_page
+
     //10
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -61,17 +66,18 @@ class OverviewViewModel : ViewModel() {
     /**
      * Sets the value of the status LiveData to the Mars API status.
      */
-    private fun getRestaurantProperties(filter: String) {
+    private fun getRestaurantProperties(filter: String, page: String = "1") {
         //5
         //7
         //11
         coroutineScope.launch {
-            var getPropertiesDeferred = RestaurantApi.retrofitService.getProperties(filter)
+            var getPropertiesDeferred = RestaurantApi.retrofitService.getProperties(filter, page)
             try {
                 _status.value = RestaurantApiStatus.LOADING
                 var listResult = getPropertiesDeferred.await()
                 _status.value = RestaurantApiStatus.DONE
                 _properties.value = listResult.restaurants
+                _current_page.value = listResult.current_page
             } catch (e: Exception) {
                 _status.value = RestaurantApiStatus.ERROR
                 _properties.value = ArrayList()
@@ -107,6 +113,10 @@ class OverviewViewModel : ViewModel() {
 
     fun updateFilter(filter: String) {
         getRestaurantProperties(filter)
+    }
+
+    fun updatePageFilter(filter: String, page: String) {
+        getRestaurantProperties(filter, page)
     }
 
 }

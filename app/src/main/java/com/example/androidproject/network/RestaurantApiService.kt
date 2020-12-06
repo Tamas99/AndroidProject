@@ -30,7 +30,7 @@ private val retrofit = Retrofit.Builder()
 //3
 interface RestaurantApiService {
     @GET("api/restaurants")
-    fun getProperties(@Query("city") city: String):
+    fun getProperties(@Query("city") city: String, @Query("page") page: String):
             //9
             Deferred<Restaurants>
 
