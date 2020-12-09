@@ -11,20 +11,35 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.*
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.androidproject.R
+import com.example.androidproject.data.FavoriteRestaurant
+import com.example.androidproject.data.User
+import com.example.androidproject.data.UserViewModel
 import com.example.androidproject.databinding.FragmentDetailBinding
+import com.example.androidproject.network.Restaurant
 import kotlinx.android.synthetic.main.fragment_detail.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-/**
- * This [Fragment] will show the detailed information about a selected piece of Mars real estate.
- */
 class DetailFragment : Fragment() {
 
     private lateinit var binding: FragmentDetailBinding
+    private lateinit var restaurant: Restaurant
+
+    private val _isActive: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
+    fun isActive(): LiveData<Boolean> = _isActive
+
+    private var isActive2: Boolean = false
+
+    private val mUserViewModel: UserViewModel by lazy {
+        ViewModelProvider(this).get(UserViewModel::class.java)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -34,7 +49,7 @@ class DetailFragment : Fragment() {
         binding = FragmentDetailBinding.inflate(inflater)
         binding.lifecycleOwner = this
 
-        val restaurant = DetailFragmentArgs.fromBundle(arguments!!).selectedProperty
+        restaurant = DetailFragmentArgs.fromBundle(arguments!!).selectedProperty
 
         val viewModelFactory = DetailViewModelFactory(restaurant, application)
 
@@ -50,7 +65,49 @@ class DetailFragment : Fragment() {
             onPhoneNumberClicked()
         }
 
+        mUserViewModel.viewModelScope.launch(Dispatchers.Main) {
+            checkUser()
+        }
+
+        isActive().observe(viewLifecycleOwner, Observer<Boolean> {
+            if (it == true) {
+
+            }
+        })
+
+        mUserViewModel.getFavRest().observe(viewLifecycleOwner, Observer<FavoriteRestaurant> {
+            if (isActive2 == true) {
+                if(it.id != 0) {
+                    mUserViewModel.deleteFav(it)
+                    Toast.makeText(requireContext(), "Restaurant removed from favorites", Toast.LENGTH_SHORT).show()
+                }
+                else {
+    //                Toast.makeText(requireContext(), "${mUserViewModel.getUser().value}", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(requireContext(), "All" + mUserViewModel.toString(), Toast.LENGTH_SHORT).show()
+                    val favRest = FavoriteRestaurant(0, restaurant.name, mUserViewModel.getUser().value!!.id)
+                    mUserViewModel.addFav(favRest)
+                    Toast.makeText(requireContext(), "Restaurant added to favorites", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+
         return binding.root
+    }
+
+    suspend fun checkUser() {
+        mUserViewModel.getUser().observe(viewLifecycleOwner, Observer<User> {
+            if (it.status == true) {
+                _isActive.postValue(it.status)
+                isActive2 = it.status
+//
+                binding.favoriteIv.setOnClickListener {
+                    if (mUserViewModel.getUser().value!!.status != false) {
+                        mUserViewModel.onFavoriteClicked(restaurant.name)
+                    }
+                }
+            }
+        })
+        mUserViewModel.getActive()
     }
 
     private fun onPhoneNumberClicked() {

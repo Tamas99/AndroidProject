@@ -56,7 +56,11 @@ class RegisterFragment : Fragment() {
 
     private fun onRegisterClicked() {
         if (insertDataIntoDatabase() == true) {
+            Toast.makeText(requireContext(), "Register was successful", Toast.LENGTH_SHORT).show()
             findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+        }
+        else {
+            Toast.makeText(requireContext(), "Register was not successful", Toast.LENGTH_SHORT).show()
         }
     }
 

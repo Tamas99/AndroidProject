@@ -7,9 +7,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.androidproject.network.Restaurant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import java.lang.NullPointerException
 
 class UserViewModel(application: Application): AndroidViewModel(application) {
 
@@ -20,10 +22,27 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
     }
     fun getUser(): LiveData<User> = user
 
+    private var allFav: List<FavoriteRestaurant> = ArrayList()
+    fun getAllFavsByUser() = allFav
+
+    // Favorite Clicked
+    private val favRestaurant: MutableLiveData<FavoriteRestaurant> by lazy {
+        MutableLiveData<FavoriteRestaurant>()
+    }
+    fun getFavRest(): LiveData<FavoriteRestaurant> = favRestaurant
+
+    // Favs by user
+    private val favsByUser: MutableLiveData<List<FavoriteRestaurant>> by lazy {
+        MutableLiveData<List<FavoriteRestaurant>>()
+    }
+    fun getFavsByUser(): LiveData<List<FavoriteRestaurant>> = favsByUser
+
     init {
         val userDao = UserDatabase.getDatabase(application).userDao()
-        repository = UserRepository(userDao)
+        val favRestDao = UserDatabase.getDatabase(application).favRestDao()
+        repository = UserRepository(userDao, favRestDao)
         readAllData = repository.readAllData
+        favRestaurant.value = FavoriteRestaurant(0,"none",1)
     }
 
     fun addUser(user: User) {
@@ -60,5 +79,67 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
             }
             user.postValue(userdata)
         }
+    }
+
+    fun deleteUser(user: User) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteUser(user)
+        }
+    }
+
+    fun addFav(favoriteRestaurant: FavoriteRestaurant) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addFav(favoriteRestaurant)
+        }
+    }
+
+    fun getFav(restaurantName: String, userid: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            var restaurant: FavoriteRestaurant? = repository.getFav(restaurantName, userid)
+            if (restaurant == null) {
+                Log.d("Tag", "Null from room ${restaurantName!!} ${user.value!!.id}")
+                Log.d("Tag", "${getAllFav()}")
+                restaurant = FavoriteRestaurant(0, "none", 1)
+            }
+            favRestaurant.postValue(restaurant)
+        }
+    }
+
+    fun getAllFav(): List<FavoriteRestaurant> {
+        viewModelScope.launch(Dispatchers.IO) {
+            allFav = repository.getAllFav()
+        }
+        return allFav
+    }
+
+    fun getFavsByUser(userid: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val listRes: List<FavoriteRestaurant>? = repository.getFavsByUser(userid)
+            favsByUser.postValue(listRes)
+        }
+    }
+
+    fun deleteFav(favoriteRestaurant: FavoriteRestaurant) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteFav(favoriteRestaurant)
+        }
+    }
+
+    fun deleteAllFav() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAllFav()
+        }
+    }
+
+    fun onFavoriteClicked(restaurantName: String?) {
+        try {
+            getFav(restaurantName!!, user.value!!.id)
+        } catch (e: NullPointerException) {
+            Log.d("Tag", "NullPointer ${restaurantName!!} ${user.value!!.id}")
+        }
+    }
+
+    override fun toString(): String {
+        return readAllData.value.toString()
     }
 }

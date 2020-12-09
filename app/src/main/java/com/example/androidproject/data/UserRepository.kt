@@ -2,7 +2,7 @@ package com.example.androidproject.data
 
 import androidx.lifecycle.LiveData
 
-class UserRepository(private val userDao: UserDao) {
+class UserRepository(private val userDao: UserDao, private val favRestDao: FavRestDao) {
 
     val readAllData: LiveData<List<User>> = userDao.readAllData()
 
@@ -20,5 +20,34 @@ class UserRepository(private val userDao: UserDao) {
 
     suspend fun getActive(): User {
         return userDao.getActive()
+    }
+
+    suspend fun deleteUser(user: User) {
+        userDao.deleteUser(user)
+    }
+
+    // Favorite Restaurant
+    suspend fun addFav(favoriteRestaurant: FavoriteRestaurant) {
+        favRestDao.addFav(favoriteRestaurant)
+    }
+
+    suspend fun getFav(restaurantName: String, userid: Int): FavoriteRestaurant {
+        return favRestDao.getFav(restaurantName, userid)
+    }
+
+    suspend fun getAllFav(): List<FavoriteRestaurant> {
+        return favRestDao.getAllFav()
+    }
+
+    suspend fun getFavsByUser(userid: Int): List<FavoriteRestaurant> {
+        return favRestDao.getFavsByUser(userid)
+    }
+
+    suspend fun deleteFav(favoriteRestaurant: FavoriteRestaurant) {
+        favRestDao.deleteFav(favoriteRestaurant)
+    }
+
+    suspend fun deleteAllFav() {
+        favRestDao.deleteAllFav()
     }
 }

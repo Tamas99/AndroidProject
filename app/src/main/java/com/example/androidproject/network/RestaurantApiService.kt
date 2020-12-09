@@ -37,6 +37,10 @@ interface RestaurantApiService {
     @GET("api/cities")
     fun getCities():
             Deferred<Cities>
+
+    @GET("api/restaurants")
+    fun getOneRes(@Query("name") name: String):
+            Deferred<Restaurant>
 }
 
 //4

@@ -19,9 +19,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.androidproject.R
+import com.example.androidproject.data.UserViewModel
 import com.example.androidproject.databinding.FragmentOverviewBinding
+import com.example.androidproject.network.Restaurant
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_overview.*
+import kotlinx.android.synthetic.main.grid_view_item.*
 import java.util.*
 
 /**
@@ -136,9 +139,5 @@ class OverviewFragment : Fragment() {
         val navHostFragment = parentFragmentManager?.findFragmentById(R.id.nav_host_fragment)
         navController = navHostFragment!!.findNavController()
         bottom_nav.setupWithNavController(navController)
-    }
-
-    override fun toString(): String {
-        return "2"
     }
 }

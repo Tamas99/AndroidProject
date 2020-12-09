@@ -3,6 +3,7 @@ package com.example.androidproject.overview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.androidproject.data.User
 import com.example.androidproject.network.Restaurant
 import com.example.androidproject.network.RestaurantApi
 import kotlinx.coroutines.CoroutineScope
@@ -50,6 +51,8 @@ class OverviewViewModel : ViewModel() {
     val current_page: LiveData<String>
         get() = _current_page
 
+
+
     //10
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -63,9 +66,7 @@ class OverviewViewModel : ViewModel() {
         getCities()
     }
 
-    /**
-     * Sets the value of the status LiveData to the Mars API status.
-     */
+
     private fun getRestaurantProperties(filter: String, page: String = "1") {
         //5
         //7
@@ -117,6 +118,18 @@ class OverviewViewModel : ViewModel() {
 
     fun updatePageFilter(filter: String, page: String) {
         getRestaurantProperties(filter, page)
+    }
+
+    fun getOneRes(name: String) {
+        coroutineScope.launch {
+            val resDeferred = RestaurantApi.retrofitService.getOneRes(name)
+            try {
+                val result = resDeferred.await()
+                _navigateToSelectedProperty.value = result
+            } catch (e: Exception) {
+                _navigateToSelectedProperty.value = null
+            }
+        }
     }
 
 }

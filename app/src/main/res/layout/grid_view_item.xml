@@ -38,11 +38,10 @@
                 android:id="@+id/favorite_iv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_favorite"
+                android:src="@drawable/ic_not_favorite"
                 android:layout_gravity="center"
                 android:layout_marginTop="30dp"
                 android:layout_marginRight="30dp"
-
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 />
