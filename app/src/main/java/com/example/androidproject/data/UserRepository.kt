@@ -1,7 +1,5 @@
 package com.example.androidproject.data
 
-import androidx.lifecycle.LiveData
-
 class UserRepository(private val userDao: UserDao, private val favRestDao: FavRestDao, private val profilePictureDao: ProfilePictureDao) {
 
     suspend fun addUser(user: User) {
@@ -22,6 +20,10 @@ class UserRepository(private val userDao: UserDao, private val favRestDao: FavRe
 
     suspend fun deleteUser(user: User) {
         userDao.deleteUser(user)
+    }
+
+    fun getUserByEmail(email: String) : User? {
+        return userDao.getUserByEmail(email)
     }
 
     // Favorite Restaurant

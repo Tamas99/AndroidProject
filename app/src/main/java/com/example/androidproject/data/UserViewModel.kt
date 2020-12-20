@@ -95,6 +95,11 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
+    fun getUserByEmail(email: String) : User? {
+        return repository.getUserByEmail(email)
+    }
+
+    // Favorite Restaurant
     fun addFav(favoriteRestaurant: FavoriteRestaurant) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.addFav(favoriteRestaurant)

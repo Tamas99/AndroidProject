@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_register.*
 class RegisterFragment : Fragment() {
 
     private lateinit var navController: NavController
-
+    private lateinit var binding: FragmentRegisterBinding
     private lateinit var mUserViewModel: UserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +35,7 @@ class RegisterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding = FragmentRegisterBinding.inflate(inflater)
+        binding = FragmentRegisterBinding.inflate(inflater)
 
         mUserViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
@@ -84,5 +84,13 @@ class RegisterFragment : Fragment() {
 
     private fun inputCheck(username: String, email: String, password: String): Boolean {
         return !(TextUtils.isEmpty(username) && TextUtils.isEmpty(email) && TextUtils.isEmpty(password))
+    }
+
+    fun isTakenEmail(email: String) : Boolean {
+        val user = mUserViewModel.getUserByEmail(email)
+        if (user == null) {
+            return false
+        }
+        return true
     }
 }

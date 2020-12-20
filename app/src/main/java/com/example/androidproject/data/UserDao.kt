@@ -27,4 +27,7 @@ interface UserDao {
     @Delete
     suspend fun deleteUser(user: User)
 
+    @Query("Select * from user_table where email like :email")
+    fun getUserByEmail(email: String) : User?
+
 }
