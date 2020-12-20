@@ -62,7 +62,7 @@ class OverviewViewModel : ViewModel() {
      * Call getRestaurantProperties() on init so we can display status immediately.
      */
     init {
-        getRestaurantProperties("London")
+        getRestaurantProperties("Washington")
         getCities()
     }
 
@@ -78,7 +78,7 @@ class OverviewViewModel : ViewModel() {
                 var listResult = getPropertiesDeferred.await()
                 _status.value = RestaurantApiStatus.DONE
                 _properties.value = listResult.restaurants
-                _current_page.value = listResult.current_page
+                _current_page.value = listResult.page
             } catch (e: Exception) {
                 _status.value = RestaurantApiStatus.ERROR
                 _properties.value = ArrayList()
@@ -96,7 +96,6 @@ class OverviewViewModel : ViewModel() {
                 _cityProperties.value = ArrayList()
             }
         }
-
     }
 
     override fun onCleared() {

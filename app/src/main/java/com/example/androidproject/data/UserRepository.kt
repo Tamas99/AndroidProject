@@ -2,9 +2,7 @@ package com.example.androidproject.data
 
 import androidx.lifecycle.LiveData
 
-class UserRepository(private val userDao: UserDao, private val favRestDao: FavRestDao) {
-
-    val readAllData: LiveData<List<User>> = userDao.readAllData()
+class UserRepository(private val userDao: UserDao, private val favRestDao: FavRestDao, private val profilePictureDao: ProfilePictureDao) {
 
     suspend fun addUser(user: User) {
         userDao.addUser(user)
@@ -49,5 +47,18 @@ class UserRepository(private val userDao: UserDao, private val favRestDao: FavRe
 
     suspend fun deleteAllFav() {
         favRestDao.deleteAllFav()
+    }
+
+    // Profile Picture
+    suspend fun addProfilePicture(profilePicture: ProfilePicture) {
+        profilePictureDao.addProfilePicture(profilePicture)
+    }
+
+    suspend fun getProfilePicture(user_id: Int) : ProfilePicture? {
+        return profilePictureDao.getProfilePicture(user_id)
+    }
+
+    suspend fun deleteProfilePicture(user_id: Int) {
+        profilePictureDao.deleteProfilePicture(user_id)
     }
 }

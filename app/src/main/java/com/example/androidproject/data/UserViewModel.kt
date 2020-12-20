@@ -1,8 +1,10 @@
 package com.example.androidproject.data
 
 import android.app.Application
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,19 +13,16 @@ import com.example.androidproject.network.Restaurant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import java.lang.IllegalStateException
 import java.lang.NullPointerException
 
 class UserViewModel(application: Application): AndroidViewModel(application) {
 
-    private val readAllData: LiveData<List<User>>
     private val repository: UserRepository
     private val user: MutableLiveData<User> by lazy {
         MutableLiveData<User>()
     }
     fun getUser(): LiveData<User> = user
-
-    private var allFav: List<FavoriteRestaurant> = ArrayList()
-    fun getAllFavsByUser() = allFav
 
     // Favorite Clicked
     private val favRestaurant: MutableLiveData<FavoriteRestaurant> by lazy {
@@ -37,11 +36,18 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
     }
     fun getFavsByUser(): LiveData<List<FavoriteRestaurant>> = favsByUser
 
+    // Profile Picture
+    private val _profilePicture: MutableLiveData<ProfilePicture> by lazy {
+        MutableLiveData<ProfilePicture>()
+    }
+    fun getImageUri() : LiveData<ProfilePicture> = _profilePicture
+
     init {
         val userDao = UserDatabase.getDatabase(application).userDao()
         val favRestDao = UserDatabase.getDatabase(application).favRestDao()
-        repository = UserRepository(userDao, favRestDao)
-        readAllData = repository.readAllData
+        val profilePictureDao = UserDatabase.getDatabase(application).profilePictureDao()
+        repository = UserRepository(userDao, favRestDao, profilePictureDao)
+        user.value = User(0,"none", "none", "none", false)
         favRestaurant.value = FavoriteRestaurant(0,"none",1)
     }
 
@@ -61,7 +67,9 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
                     repository.updateUser(updateUser)
                     user.postValue(updateUser)
                 }
-            }catch (e: Exception) {}
+            }catch (e: Exception) {
+                Log.e("TagReadUser", e.toString())
+            }
         }
     }
 
@@ -98,18 +106,10 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
             var restaurant: FavoriteRestaurant? = repository.getFav(restaurantName, userid)
             if (restaurant == null) {
                 Log.d("Tag", "Null from room ${restaurantName!!} ${user.value!!.id}")
-                Log.d("Tag", "${getAllFav()}")
                 restaurant = FavoriteRestaurant(0, "none", 1)
             }
             favRestaurant.postValue(restaurant)
         }
-    }
-
-    fun getAllFav(): List<FavoriteRestaurant> {
-        viewModelScope.launch(Dispatchers.IO) {
-            allFav = repository.getAllFav()
-        }
-        return allFav
     }
 
     fun getFavsByUser(userid: Int) {
@@ -131,7 +131,11 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun onFavoriteClicked(restaurantName: String?) {
+    fun onFavoriteClicked(restaurantName: String?, active: Boolean) {
+        if (active == false) {
+            Toast.makeText(this.getApplication(), "Please log in to make it favorite", Toast.LENGTH_LONG).show()
+            return
+        }
         try {
             getFav(restaurantName!!, user.value!!.id)
         } catch (e: NullPointerException) {
@@ -139,7 +143,31 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    override fun toString(): String {
-        return readAllData.value.toString()
+    // Profile Picture
+    fun addProfilePicture(profilePicture: ProfilePicture) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addProfilePicture(profilePicture)
+        }
+    }
+
+    fun getProfilePicture(user_id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            var profilePicture: ProfilePicture?
+            try {
+                profilePicture = repository.getProfilePicture(user_id)
+            } catch (e: IllegalStateException) {
+                Log.e("TagIllegalState", e.toString())
+                return@launch
+            }
+            if (profilePicture != null) {
+                _profilePicture.postValue(profilePicture)
+            }
+        }
+    }
+
+    fun deleteProfilePicture(user_id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteProfilePicture(user_id)
+        }
     }
 }

@@ -5,11 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [User::class, FavoriteRestaurant::class], version = 3, exportSchema = false)
+@Database(entities = [User::class, FavoriteRestaurant::class, ProfilePicture::class], version = 5, exportSchema = false)
 abstract class UserDatabase: RoomDatabase() {
 
     abstract fun userDao(): UserDao
     abstract fun favRestDao(): FavRestDao
+    abstract fun profilePictureDao(): ProfilePictureDao
 
     companion object{
 

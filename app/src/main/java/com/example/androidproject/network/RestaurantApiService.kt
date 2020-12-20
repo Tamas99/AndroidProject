@@ -11,7 +11,7 @@ import retrofit2.create
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-private const val BASE_URL = "https://opentable.herokuapp.com/"
+private const val BASE_URL = "https://ratpark-api.imok.space/"
 
 //5
 private val moshi = Moshi.Builder()
@@ -29,16 +29,16 @@ private val retrofit = Retrofit.Builder()
 
 //3
 interface RestaurantApiService {
-    @GET("api/restaurants")
+    @GET("restaurants")
     fun getProperties(@Query("city") city: String, @Query("page") page: String):
             //9
             Deferred<Restaurants>
 
-    @GET("api/cities")
+    @GET("cities")
     fun getCities():
             Deferred<Cities>
 
-    @GET("api/restaurants")
+    @GET("restaurants")
     fun getOneRes(@Query("name") name: String):
             Deferred<Restaurant>
 }

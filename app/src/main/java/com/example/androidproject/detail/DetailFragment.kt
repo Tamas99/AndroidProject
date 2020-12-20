@@ -30,12 +30,7 @@ class DetailFragment : Fragment() {
     private lateinit var binding: FragmentDetailBinding
     private lateinit var restaurant: Restaurant
 
-    private val _isActive: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
-    }
-    fun isActive(): LiveData<Boolean> = _isActive
-
-    private var isActive2: Boolean = false
+    private var isActive: Boolean = false
 
     private val mUserViewModel: UserViewModel by lazy {
         ViewModelProvider(this).get(UserViewModel::class.java)
@@ -57,6 +52,12 @@ class DetailFragment : Fragment() {
                 this, viewModelFactory).get(DetailViewModel::class.java
         )
 
+        mUserViewModel.getActive()
+
+        binding.favoriteIv.setOnClickListener {
+            mUserViewModel.onFavoriteClicked(restaurant.name, mUserViewModel.getUser().value!!.status)
+        }
+
         binding.buttonGoogleMap.setOnClickListener {
             onGoogleMapClicked()
         }
@@ -65,49 +66,20 @@ class DetailFragment : Fragment() {
             onPhoneNumberClicked()
         }
 
-        mUserViewModel.viewModelScope.launch(Dispatchers.Main) {
-            checkUser()
-        }
-
-        isActive().observe(viewLifecycleOwner, Observer<Boolean> {
-            if (it == true) {
-
-            }
-        })
-
         mUserViewModel.getFavRest().observe(viewLifecycleOwner, Observer<FavoriteRestaurant> {
-            if (isActive2 == true) {
+            if (mUserViewModel.getUser().value!!.status == true) {
                 if(it.id != 0) {
                     mUserViewModel.deleteFav(it)
                     Toast.makeText(requireContext(), "Restaurant removed from favorites", Toast.LENGTH_SHORT).show()
                 }
                 else {
-    //                Toast.makeText(requireContext(), "${mUserViewModel.getUser().value}", Toast.LENGTH_SHORT).show()
-//                    Toast.makeText(requireContext(), "All" + mUserViewModel.toString(), Toast.LENGTH_SHORT).show()
                     val favRest = FavoriteRestaurant(0, restaurant.name, mUserViewModel.getUser().value!!.id)
                     mUserViewModel.addFav(favRest)
                     Toast.makeText(requireContext(), "Restaurant added to favorites", Toast.LENGTH_SHORT).show()
                 }
             }
         })
-
         return binding.root
-    }
-
-    suspend fun checkUser() {
-        mUserViewModel.getUser().observe(viewLifecycleOwner, Observer<User> {
-            if (it.status == true) {
-                _isActive.postValue(it.status)
-                isActive2 = it.status
-//
-                binding.favoriteIv.setOnClickListener {
-                    if (mUserViewModel.getUser().value!!.status != false) {
-                        mUserViewModel.onFavoriteClicked(restaurant.name)
-                    }
-                }
-            }
-        })
-        mUserViewModel.getActive()
     }
 
     private fun onPhoneNumberClicked() {

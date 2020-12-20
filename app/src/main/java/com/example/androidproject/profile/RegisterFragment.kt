@@ -85,9 +85,4 @@ class RegisterFragment : Fragment() {
     private fun inputCheck(username: String, email: String, password: String): Boolean {
         return !(TextUtils.isEmpty(username) && TextUtils.isEmpty(email) && TextUtils.isEmpty(password))
     }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = RegisterFragment()
-    }
 }
