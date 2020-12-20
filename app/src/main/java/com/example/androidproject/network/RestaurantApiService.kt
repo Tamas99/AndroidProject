@@ -13,25 +13,19 @@ import retrofit2.http.Query
 
 private const val BASE_URL = "https://ratpark-api.imok.space/"
 
-//5
 private val moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
         .build()
 
-//2
 private val retrofit = Retrofit.Builder()
-        //5
         .addConverterFactory(MoshiConverterFactory.create(moshi))
-        //8
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .baseUrl(BASE_URL)
         .build()
 
-//3
 interface RestaurantApiService {
     @GET("restaurants")
     fun getProperties(@Query("city") city: String, @Query("page") page: String):
-            //9
             Deferred<Restaurants>
 
     @GET("cities")
@@ -43,7 +37,6 @@ interface RestaurantApiService {
             Deferred<Restaurant>
 }
 
-//4
 object RestaurantApi {
     val retrofitService: RestaurantApiService by lazy {
         retrofit.create(RestaurantApiService::class.java)

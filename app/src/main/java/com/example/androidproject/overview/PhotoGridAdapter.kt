@@ -5,8 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.androidproject.MainActivity
-import com.example.androidproject.databinding.FragmentOverviewBinding
 import com.example.androidproject.databinding.GridViewItemBinding
 import com.example.androidproject.network.Restaurant
 
@@ -16,9 +14,7 @@ class PhotoGridAdapter(private val onClickListener: OnClickListener) : ListAdapt
         fun bind(restaurant: Restaurant) {
             binding.property = restaurant
             binding.executePendingBindings()
-
         }
-
     }
 
     companion object DiffCallback : DiffUtil.ItemCallback<Restaurant>() {

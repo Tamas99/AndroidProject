@@ -36,18 +36,18 @@ class SplashScreenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
-
         val action = SplashScreenFragmentDirections.actionSplashscreenToOverviewFragment()
 
-
+        /**
+         * Timer set to 3 seconds which navigates to
+         * OverviewFragment after
+         */
         Timer().schedule(object : TimerTask() {
             override fun run() {
                 try {
                     synchronized(this) {
-
 
                     }
                 }catch ( e: InterruptedException) {
@@ -56,13 +56,5 @@ class SplashScreenFragment : Fragment() {
                 navController.navigate(action)
             }
         }, 3000)
-
     }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = SplashScreenFragment()
-    }
-
-
 }

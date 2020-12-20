@@ -1,34 +1,22 @@
 package com.example.androidproject.overview
 
-import android.content.Context
-import android.content.Context.MODE_WORLD_READABLE
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
-import android.widget.Adapter
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.androidproject.R
-import com.example.androidproject.data.UserViewModel
 import com.example.androidproject.databinding.FragmentOverviewBinding
-import com.example.androidproject.network.Restaurant
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_overview.*
-import kotlinx.android.synthetic.main.grid_view_item.*
 import java.util.*
 
 /**
- * This fragment shows the the status of the opentable web services transaction.
+ * This fragment shows the the status of the opentable web service.
  */
 class OverviewFragment : Fragment() {
     private lateinit var navController: NavController
@@ -58,12 +46,19 @@ class OverviewFragment : Fragment() {
         // Giving the binding access to the OverviewViewModel
         binding.viewModel = viewModel
 
+        /**
+         * Give the photosGrid RecyclerView a PhotosGridAdapter which overrides OnClickListener to
+         * give the SelectedProperty LivaData the selected Restaurant to show
+         */
         binding.photosGrid.adapter = PhotoGridAdapter(PhotoGridAdapter.OnClickListener {
             viewModel.displayPropertyDetails(it)
         })
 
-
-
+        /**
+         * Observe the LiveData to navigate to the DetailFragment when data changes
+         * and call displayPropertyDetailsComplete() to being able to navigate back
+         * to the overview fragment
+         */
         viewModel.navigateToSelectedProperty.observe(viewLifecycleOwner, Observer {
             if (null != it) {
                 this.findNavController().navigate(OverviewFragmentDirections.actionShowDetail(it))
@@ -71,6 +66,11 @@ class OverviewFragment : Fragment() {
             }
         })
 
+        /**
+         * When we get the cities from the webservice, put them into the spinner's adapter
+         * to show them in the spinner
+         * Setting a clickListener, when an item is selected to show the corresponding cities
+         */
         viewModel.cityProperties.observe(viewLifecycleOwner, Observer<List<String>> {
             binding.spinnerCity.adapter = ArrayAdapter(requireContext(), R.layout.spinner_text_view, it)
             if (itemPos != -1) {
@@ -103,6 +103,9 @@ class OverviewFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Paginate back
+     */
     private fun onPrevClicked() {
         if (cur_page_var == 1) return
         Timer().schedule(object : TimerTask() {
@@ -115,6 +118,9 @@ class OverviewFragment : Fragment() {
         }, 200)
     }
 
+    /**
+     * Paginate forward
+     */
     private fun onNextClicked() {
         Timer().schedule(object : TimerTask() {
             override fun run() {
@@ -135,7 +141,6 @@ class OverviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val navHostFragment = parentFragmentManager?.findFragmentById(R.id.nav_host_fragment)
         navController = navHostFragment!!.findNavController()
         bottom_nav.setupWithNavController(navController)

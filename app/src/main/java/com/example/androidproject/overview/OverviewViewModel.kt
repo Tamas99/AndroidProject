@@ -3,17 +3,12 @@ package com.example.androidproject.overview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.androidproject.data.User
 import com.example.androidproject.network.Restaurant
 import com.example.androidproject.network.RestaurantApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-//import javax.security.auth.callback.Callback
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.lang.Exception
 
 enum class RestaurantApiStatus { LOADING, ERROR, DONE }
@@ -24,7 +19,6 @@ enum class RestaurantApiStatus { LOADING, ERROR, DONE }
  */
 class OverviewViewModel : ViewModel() {
 
-    //12
     // The internal MutableLiveData String that stores the status of the most recent request
     private val _status = MutableLiveData<RestaurantApiStatus>()
     // The external immutable LiveData for the request status String
@@ -51,9 +45,6 @@ class OverviewViewModel : ViewModel() {
     val current_page: LiveData<String>
         get() = _current_page
 
-
-
-    //10
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
@@ -68,9 +59,6 @@ class OverviewViewModel : ViewModel() {
 
 
     private fun getRestaurantProperties(filter: String, page: String = "1") {
-        //5
-        //7
-        //11
         coroutineScope.launch {
             var getPropertiesDeferred = RestaurantApi.retrofitService.getProperties(filter, page)
             try {
@@ -117,18 +105,6 @@ class OverviewViewModel : ViewModel() {
 
     fun updatePageFilter(filter: String, page: String) {
         getRestaurantProperties(filter, page)
-    }
-
-    fun getOneRes(name: String) {
-        coroutineScope.launch {
-            val resDeferred = RestaurantApi.retrofitService.getOneRes(name)
-            try {
-                val result = resDeferred.await()
-                _navigateToSelectedProperty.value = result
-            } catch (e: Exception) {
-                _navigateToSelectedProperty.value = null
-            }
-        }
     }
 
 }
