@@ -6,7 +6,7 @@
   
 ## 2. Structure
   
-  The application contains a splashscreen at the very start, which is starts with the application and disappear after 3 seconds. After that, we are navigated to our home screen where we have an overview about the restaurants in the selected city. The restaurants are displayed in a recyclerview and contain some basic information. But if we are interested in one, we simply click them and the application navigates us to a detailed overview where are shown all the informations about the restaurant.
+  The application contains a splashscreen at the very start, which starts with the application and disappear after 3 seconds. After that, we are navigated to our home screen where we have an overview about the restaurants in the selected city. The restaurants are displayed in a recyclerview and contain some basic information. But if we are interested in one, we simply click them and the application navigates us to a detailed overview where are shown all the informations about the restaurant.
   There's a little bottom navigation bar between home screen and profile screen. If we click on profile, we will be able to log in, register or check out our profile information if we were already logged in.
   There is also a Room database containing necessary informations for our application, making it able to run properly.
 This database has three entities: User, FavoriteRestaurant and ProfilePicture. Their purposes are already shown by their names.
